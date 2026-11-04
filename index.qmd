@@ -1,7 +1,354 @@
 ---
-title: "Census Maps"
+title: "Sarasota County, Florida"
 ---
 
-This is a Quarto website.
+<header class="hero">
+<div class="eyebrow"><span class="live-dot"></span> FLORIDA, THROUGH TIME</div>
+<h1>A place in motion.</h1>
+<p class="hero-copy">Explore how life in Sarasota County has changed, one Census estimate at a time. Move the slider, choose a measure, and compare Sarasota with its neighbors.</p>
+<div class="hero-meta"><span>67 counties</span><span class="meta-divider">/</span><span>16 years of estimates</span><span class="meta-divider">/</span><span>U.S. Census Bureau</span></div>
+</header>
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+<main>
+<section class="control-panel" aria-label="Dashboard controls">
+<div class="year-control">
+<div class="control-heading">
+<label for="year-slider">Travel through time</label>
+<output id="year-label" for="year-slider">2024</output>
+</div>
+<input id="year-slider" type="range" min="2009" max="2024" value="2024" step="1" aria-label="Select ACS estimate ending year">
+<div class="slider-ends"><span>2009</span><span>2024</span></div>
+</div>
+<button id="play-button" class="play-button" type="button" aria-label="Play through years">
+<span aria-hidden="true">▶</span><span id="play-label">Play</span>
+</button>
+<div class="metric-control">
+<label for="metric-select">Explore a measure</label>
+<select id="metric-select">
+<option value="population">Population</option>
+<option value="median_household_income">Median household income</option>
+<option value="poverty_rate_percent">People below poverty level</option>
+<option value="median_gross_rent">Median gross rent</option>
+<option value="median_home_value">Median home value</option>
+<option value="homeownership_rate_percent">Homeownership</option>
+<option value="high_school_or_higher_percent">High school graduate or higher</option>
+<option value="bachelors_or_higher_percent">Bachelor's degree or higher</option>
+<option value="under_18_percent">Population under 18</option>
+<option value="age_18_to_64_percent">Population ages 18–64</option>
+<option value="age_65_plus_percent">Population 65 and older</option>
+</select>
+</div>
+</section>
+
+<p id="year-note" class="year-note" aria-live="polite"></p>
+
+<section class="stat-grid" aria-label="Sarasota County highlights">
+<article class="stat-card stat-primary">
+<span class="stat-label" id="current-label">SARASOTA COUNTY · 2024</span>
+<strong class="stat-value" id="current-value">—</strong>
+<span class="stat-detail" id="metric-name">Population</span>
+</article>
+<article class="stat-card">
+<span class="stat-label">CHANGE SINCE FIRST AVAILABLE</span>
+<strong class="stat-value" id="change-value">—</strong>
+<span class="stat-detail" id="change-detail">Compared with the first estimate</span>
+</article>
+<article class="stat-card">
+<span class="stat-label">VS. FLORIDA</span>
+<strong class="stat-value" id="state-value">—</strong>
+<span class="stat-detail" id="state-detail">Difference from statewide estimate</span>
+</article>
+<article class="stat-card">
+<span class="stat-label">LONG-RUN DIRECTION</span>
+<strong class="stat-value" id="trend-value">—</strong>
+<span class="stat-detail" id="trend-detail">Linear trend across available estimates</span>
+</article>
+</section>
+
+<section class="chart-card" aria-labelledby="trend-heading">
+<div class="section-heading">
+<div>
+<p class="section-kicker">THE BIG PICTURE</p>
+<h2 id="trend-heading">The shape of change</h2>
+</div>
+<span class="chart-note">ACS 5-year estimates</span>
+</div>
+<div id="trend-chart" class="chart-wrap" role="img" aria-label="Trend chart comparing Sarasota, Manatee, Charlotte, and DeSoto counties"></div>
+<div id="trend-legend" class="legend" aria-label="Chart legend"></div>
+</section>
+
+<section class="chart-card comparison-card" aria-labelledby="comparison-heading">
+<div class="section-heading">
+<div>
+<p class="section-kicker">A CLOSER LOOK</p>
+<h2 id="comparison-heading">Sarasota and its neighbors</h2>
+</div>
+<span class="chart-note" id="comparison-year">2024 estimate</span>
+</div>
+<p class="comparison-copy">Compare the selected measure across nearby counties for the year you picked.</p>
+<div id="comparison-chart" class="comparison-list" role="img" aria-label="Selected-year comparison of nearby counties"></div>
+</section>
+
+<footer class="source-note">
+<strong>Reading the data</strong>
+<p>These are American Community Survey (ACS) 5-year estimates, labeled by their ending year. Each estimate combines five years of survey responses, so adjacent years overlap and are not single-year snapshots. Household income, rent, and home value are reported in each release's dollars and are not adjusted for inflation here. Education measures are available from 2012 onward. The trend line summarizes the available estimates; it does not forecast the future.</p>
+<p>Source: U.S. Census Bureau, ACS 5-Year Estimates. County geography is Sarasota County, which includes the City of Sarasota and surrounding communities.</p>
+</footer>
+</main>
+```{r}
+#| echo: false
+#| results: asis
+
+data <- readr::read_csv(
+  "data/florida_county_acs_trends.csv",
+  show_col_types = FALSE
+) |>
+  dplyr::mutate(
+    area = dplyr::case_when(
+      GEOID == "12" ~ "Florida",
+      GEOID == "12115" ~ "Sarasota",
+      GEOID == "12081" ~ "Manatee",
+      GEOID == "12015" ~ "Charlotte",
+      GEOID == "12027" ~ "DeSoto",
+      TRUE ~ NA_character_
+    )
+  ) |>
+  dplyr::filter(!is.na(area)) |>
+  dplyr::select(area, year, dplyr::where(is.numeric))
+
+json_data <- jsonlite::toJSON(data, dataframe = "rows", na = "null", auto_unbox = TRUE)
+cat('<script id="census-data" type="application/json">', json_data, '</script>')
+```
+
+<script>
+(() => {
+  const data = JSON.parse(document.getElementById("census-data").textContent);
+  const areas = ["Sarasota", "Manatee", "Charlotte", "DeSoto"];
+  const colors = {
+    Sarasota: "#d65b42",
+    Manatee: "#287a78",
+    Charlotte: "#6684a5",
+    DeSoto: "#9b865b"
+  };
+  const metrics = {
+    population: { label: "Population", kind: "number" },
+    median_household_income: { label: "Median household income", kind: "currency" },
+    poverty_rate_percent: { label: "Below poverty level", kind: "percent" },
+    median_gross_rent: { label: "Median gross rent", kind: "currency" },
+    median_home_value: { label: "Median home value", kind: "currency" },
+    homeownership_rate_percent: { label: "Homeownership", kind: "percent" },
+    high_school_or_higher_percent: { label: "High school graduate or higher", kind: "percent", start: 2012 },
+    bachelors_or_higher_percent: { label: "Bachelor's degree or higher", kind: "percent", start: 2012 },
+    under_18_percent: { label: "Population under 18", kind: "percent" },
+    age_18_to_64_percent: { label: "Population ages 18–64", kind: "percent" },
+    age_65_plus_percent: { label: "Population 65 and older", kind: "percent" }
+  };
+  const slider = document.getElementById("year-slider");
+  const metricSelect = document.getElementById("metric-select");
+  const playButton = document.getElementById("play-button");
+  let playTimer;
+
+  const rowsFor = (area, key) => data
+    .filter(row => row.area === area && Number.isFinite(row[key]))
+    .sort((a, b) => a.year - b.year);
+  const rowAt = (area, year) => data.find(row => row.area === area && row.year === year);
+  const format = (value, kind, compact = false) => {
+    if (!Number.isFinite(value)) return "—";
+    if (kind === "percent") return `${value.toFixed(1)}%`;
+    if (kind === "currency") {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0,
+        notation: compact ? "compact" : "standard"
+      }).format(value);
+    }
+    return new Intl.NumberFormat("en-US", {
+      maximumFractionDigits: 0,
+      notation: compact ? "compact" : "standard"
+    }).format(value);
+  };
+  const signed = value => `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
+  const text = (id, value) => {
+    document.getElementById(id).textContent = value;
+  };
+  const svgNode = (name, attributes = {}) => {
+    const node = document.createElementNS("http://www.w3.org/2000/svg", name);
+    for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, value);
+    return node;
+  };
+
+  function renderTrend(key, meta) {
+    const width = 900;
+    const height = 330;
+    const pad = { top: 18, right: 24, bottom: 42, left: 76 };
+    const svg = svgNode("svg", {
+      viewBox: `0 0 ${width} ${height}`,
+      role: "presentation",
+      preserveAspectRatio: "none"
+    });
+    const series = areas.map(area => ({ area, rows: rowsFor(area, key) }));
+    const values = series.flatMap(item => item.rows.map(row => row[key]));
+    const minValue = Math.min(...values);
+    const maxValue = Math.max(...values);
+    const spread = maxValue - minValue || Math.abs(maxValue) * 0.1 || 1;
+    const low = Math.max(0, minValue - spread * 0.12);
+    const high = maxValue + spread * 0.12;
+    const x = year => pad.left + (year - 2009) / (2024 - 2009) * (width - pad.left - pad.right);
+    const y = value => height - pad.bottom - (value - low) / (high - low) * (height - pad.top - pad.bottom);
+
+    for (let tick = 0; tick <= 4; tick += 1) {
+      const value = low + (high - low) * tick / 4;
+      const lineY = y(value);
+      svg.append(svgNode("line", { x1: pad.left, x2: width - pad.right, y1: lineY, y2: lineY, class: "grid-line" }));
+      const label = svgNode("text", { x: pad.left - 12, y: lineY + 4, "text-anchor": "end", class: "axis-label" });
+      label.textContent = format(value, meta.kind, true);
+      svg.append(label);
+    }
+    [2009, 2012, 2015, 2018, 2021, 2024].forEach(year => {
+      const label = svgNode("text", { x: x(year), y: height - 12, "text-anchor": "middle", class: "axis-label" });
+      label.textContent = year;
+      svg.append(label);
+    });
+    series.forEach(({ area, rows }) => {
+      if (!rows.length) return;
+      const path = rows.map((row, index) => `${index ? "L" : "M"}${x(row.year)},${y(row[key])}`).join(" ");
+      svg.append(svgNode("path", { d: path, class: "trend-line", stroke: colors[area] }));
+      rows.forEach(row => {
+        svg.append(svgNode("circle", {
+          cx: x(row.year), cy: y(row[key]), r: row.year === Number(slider.value) ? 5 : 2.5,
+          fill: colors[area], class: "trend-point"
+        }));
+      });
+    });
+    const chart = document.getElementById("trend-chart");
+    chart.replaceChildren(svg);
+    chart.setAttribute("aria-label", `${meta.label} trends for Sarasota, Manatee, Charlotte, and DeSoto counties from 2009 through 2024`);
+
+    const legend = document.getElementById("trend-legend");
+    legend.replaceChildren();
+    areas.forEach(area => {
+      const item = document.createElement("span");
+      item.className = "legend-item";
+      const swatch = document.createElement("i");
+      swatch.style.backgroundColor = colors[area];
+      item.append(swatch, document.createTextNode(`${area} County`));
+      legend.append(item);
+    });
+  }
+
+  function renderComparison(key, meta, year) {
+    const values = areas
+      .map(area => ({ area, value: rowAt(area, year)?.[key] }))
+      .filter(item => Number.isFinite(item.value));
+    const maxValue = Math.max(...values.map(item => item.value), 1);
+    const list = document.getElementById("comparison-chart");
+    list.replaceChildren();
+    values.forEach(({ area, value }) => {
+      const row = document.createElement("div");
+      row.className = `comparison-row${area === "Sarasota" ? " is-sarasota" : ""}`;
+      const name = document.createElement("span");
+      name.className = "comparison-name";
+      name.textContent = `${area} County`;
+      const track = document.createElement("span");
+      track.className = "bar-track";
+      const bar = document.createElement("i");
+      bar.className = "bar-fill";
+      bar.style.width = `${Math.max(1, value / maxValue * 100)}%`;
+      bar.style.backgroundColor = colors[area];
+      track.append(bar);
+      const amount = document.createElement("strong");
+      amount.className = "comparison-value";
+      amount.textContent = format(value, meta.kind, true);
+      row.append(name, track, amount);
+      list.append(row);
+    });
+    list.setAttribute("aria-label", `${meta.label} in nearby counties in ${year}`);
+
+    const florida = rowAt("Florida", year)?.[key];
+    const sarasota = rowAt("Sarasota", year)?.[key];
+    const stateDetail = Number.isFinite(florida) && Number.isFinite(sarasota)
+      ? `${format(florida, meta.kind, true)} statewide · Sarasota ${
+        meta.kind === "number"
+          ? `is ${(sarasota / florida * 100).toFixed(1)}% of Florida's total`
+          : meta.kind === "percent"
+            ? `is ${sarasota - florida > 0 ? "+" : ""}${(sarasota - florida).toFixed(1)} percentage points`
+            : `is ${signed((sarasota / florida - 1) * 100)} vs. Florida`
+      }`
+      : "Florida comparison unavailable";
+    text("state-value", Number.isFinite(florida) ? format(florida, meta.kind, true) : "—");
+    text("state-detail", stateDetail);
+  }
+
+  function update() {
+    const year = Number(slider.value);
+    const key = metricSelect.value;
+    const meta = metrics[key];
+    const current = rowAt("Sarasota", year)?.[key];
+    const series = rowsFor("Sarasota", key);
+    const first = series[0];
+    const selected = series.find(row => row.year === year);
+
+    text("year-label", year);
+    text("current-label", `SARASOTA COUNTY · ${year}`);
+    text("metric-name", meta.label);
+    text("comparison-year", `${year} ACS estimate`);
+    if (Number.isFinite(current)) {
+      text("current-value", format(current, meta.kind));
+      text("change-value", selected && first
+        ? signed((selected[key] / first[key] - 1) * 100)
+        : "—");
+      text("change-detail", first
+        ? `Since ${first.year}, the first available estimate`
+        : "No estimate available");
+    } else {
+      text("current-value", "Not available");
+      text("change-value", "—");
+      text("change-detail", meta.start ? `Available from ${meta.start}` : "No estimate available");
+    }
+
+    const average = series.reduce((sum, row) => sum + row[key], 0) / (series.length || 1);
+    const xMean = series.reduce((sum, row) => sum + row.year, 0) / (series.length || 1);
+    const slope = series.reduce((sum, row) => sum + (row.year - xMean) * (row[key] - average), 0)
+      / series.reduce((sum, row) => sum + (row.year - xMean) ** 2, 0);
+    const annualPercent = average ? slope / average * 100 : 0;
+    text("trend-value", `${annualPercent > 0 ? "+" : ""}${annualPercent.toFixed(1)}%`);
+    text("trend-detail", "Average annual rate from a linear trend");
+
+    const end = year;
+    text("year-note", `ACS ${end - 4}–${end} five-year estimate${meta.start && year < meta.start ? ` · ${meta.label} begins in ${meta.start}` : ""}`);
+    document.getElementById("year-note").classList.toggle("is-unavailable", !Number.isFinite(current));
+    renderTrend(key, meta);
+    renderComparison(key, meta, year);
+  }
+
+  slider.addEventListener("input", update);
+  metricSelect.addEventListener("change", update);
+  playButton.addEventListener("click", () => {
+    if (playTimer) {
+      clearInterval(playTimer);
+      playTimer = undefined;
+      playButton.classList.remove("is-playing");
+      playButton.setAttribute("aria-label", "Play through years");
+      text("play-label", "Play");
+      playButton.querySelector("[aria-hidden='true']").textContent = "▶";
+      return;
+    }
+    if (Number(slider.value) >= Number(slider.max)) slider.value = slider.min;
+    playButton.classList.add("is-playing");
+    playButton.setAttribute("aria-label", "Pause years");
+    text("play-label", "Pause");
+    playButton.querySelector("[aria-hidden='true']").textContent = "Ⅱ";
+    playTimer = setInterval(() => {
+      const next = Number(slider.value) + 1;
+      if (next > Number(slider.max)) {
+        playButton.click();
+        return;
+      }
+      slider.value = next;
+      update();
+    }, 850);
+  });
+  update();
+})();
+</script>

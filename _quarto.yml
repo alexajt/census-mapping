@@ -2,7 +2,7 @@ project:
   type: website
 
 website:
-  title: "Census Maps"
+  title: "Sarasota County, Florida"
   navbar:
     left:
       - href: index.qmd
@@ -15,7 +15,6 @@ format:
       - cosmo
       - brand
     css: styles.css
-    toc: true
-
+    toc: false
 
 
