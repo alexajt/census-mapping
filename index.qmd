@@ -43,7 +43,7 @@
 <option value="non_citizen_percent">Non-U.S. citizens (%)</option>
 </optgroup>
 <optgroup label="Ethnicity &amp; Race">
-<option value="hispanic_percent">Hispanic or Latino (%)</option>
+<option value="hispanic_percent" selected>Hispanic or Latino (%)</option>
 <option value="white_non_hispanic_percent">White, non-Hispanic (%)</option>
 <option value="black_non_hispanic_percent">Black, non-Hispanic (%)</option>
 <option value="asian_non_hispanic_percent">Asian, non-Hispanic (%)</option>
@@ -192,7 +192,11 @@ fl_tracts <- readr::read_csv(
   show_col_types = FALSE
 ) |>
   dplyr::mutate(
-    short_name = sub(";.*$", "", name)
+    short_name = sub(";.*$", "", name),
+    dplyr::across(
+      -c(GEOID, county_geoid, name, level, year, short_name, population, foreign_born),
+      \(x) dplyr::if_else(population < 100, NA_real_, x)
+    )
   ) |>
   dplyr::select(-name, -level, -year)
 
@@ -469,6 +473,7 @@ cat('<script id="fl-counties-geojson" type="application/json">', counties_geojso
       svg.append(path);
     });
 
+    svg.querySelectorAll(".map-feature.is-active").forEach(el => svg.append(el));
     const stage = document.getElementById("fl-county-map");
     stage.replaceChildren(svg);
   }
@@ -480,14 +485,15 @@ cat('<script id="fl-counties-geojson" type="application/json">', counties_geojso
     text("map-badge", `${cName} selected`);
 
     const countyTractRows = tractsData.filter(r => r.county_geoid === selectedCountyGeoid);
-    text("tract-count-label", `${countyTractRows.length} Census tracts`);
 
     if (!tractsGeo) {
+      text("tract-count-label", `${countyTractRows.length} Census tracts`);
       stage.textContent = "Loading Census tract boundaries…";
       return;
     }
 
     const features = tractsGeo.features.filter(f => f.properties.county_geoid === selectedCountyGeoid);
+    text("tract-count-label", `${features.length} Census tracts`);
     const width = 440, height = 320;
     const svg = svgNode("svg", { viewBox: `0 0 ${width} ${height}` });
     const project = makeProjector(features, width, height, 12);
@@ -542,6 +548,7 @@ cat('<script id="fl-counties-geojson" type="application/json">', counties_geojso
       svg.append(path);
     });
 
+    svg.querySelectorAll(".map-feature.is-active").forEach(el => svg.append(el));
     stage.replaceChildren(svg);
   }
 

@@ -1,5 +1,49 @@
 ---
-title: "About"
 ---
 
-About this site
+<header class="hero">
+<div class="eyebrow"><span class="live-dot"></span> DATA &amp; METHODOLOGY</div>
+<h1>About this project.</h1>
+<p class="hero-copy">How this dashboard tracks migration flows, foreign-born populations, race and ethnicity, and economic conditions across Florida's 67 counties and 5,100+ Census tracts.</p>
+</header>
+
+<div class="dashboard-content">
+<section class="chart-card">
+<div class="section-heading">
+<div>
+<p class="section-kicker">THREE GEOGRAPHIC SCALES</p>
+<h2>Data organization</h2>
+</div>
+<span class="chart-note">Reproducible via download.R</span>
+</div>
+<p class="comparison-copy">All data is downloaded from the U.S. Census Bureau's American Community Survey (ACS) 5-year estimates using <code>tidycensus</code> and <code>tigris</code> in <code>download.R</code> and stored across three folders:</p>
+<div class="tract-metrics-mini" style="margin-top: 14px;">
+<div><strong>county/</strong>Sarasota County tract trends (2010–2024), all 5,160 Florida Census tracts (2024), and simplified tract boundary polygons.</div>
+<div><strong>state/</strong>All 67 Florida counties and Florida statewide totals from 2010 through 2024, plus Florida county boundaries.</div>
+<div><strong>country/</strong>All 50 U.S. states and United States national benchmarks from 2010 through 2024.</div>
+</div>
+</section>
+
+<section class="chart-card">
+<div class="section-heading">
+<div>
+<p class="section-kicker">ACS 5-YEAR TABLES</p>
+<h2>Measures tracked</h2>
+</div>
+<span class="chart-note">2010–2024 ACS 5-Year</span>
+</div>
+<div class="tract-metrics-mini" style="margin-top: 14px;">
+<div><strong>Migration (B07001)</strong>Share of residents who lived in the same house 1 year ago, moved within the same county, moved from another Florida county, moved from another U.S. state, or moved from abroad.</div>
+<div><strong>Foreign-Born (B05002)</strong>Total foreign-born residents, foreign-born percentage of total population, naturalized U.S. citizens, and non-U.S. citizens.</div>
+<div><strong>Ethnicity &amp; Race (B03002)</strong>Hispanic or Latino population share alongside non-Hispanic White, Black, and Asian population shares.</div>
+<div><strong>Income &amp; Poverty (B19013, B17001)</strong>Median household income (in nominal release-year dollars) and percentage of residents with income below the federal poverty level.</div>
+<div><strong>Employment (B23025)</strong>Civilian unemployment rate among the civilian labor force (available from the 2011 ACS 5-year release onward).</div>
+<div><strong>Housing Costs (B25064, B25077)</strong>Median gross rent and median owner-occupied home value.</div>
+</div>
+</section>
+
+<footer class="source-note">
+<strong>Methodological notes</strong>
+<p>ACS 5-year estimates pool 60 months of survey responses to provide reliable neighborhood-level data for Census tracts. Uninhabited offshore water tracts and special land-use tracts with fewer than 100 residents (such as airports) are excluded from percentage rankings so small denominators do not distort county color scales.</p>
+</footer>
+</div>
