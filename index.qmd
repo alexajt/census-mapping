@@ -1,5 +1,4 @@
 ---
-title: "Sarasota County, Florida"
 ---
 
 <header class="hero">
@@ -9,7 +8,7 @@ title: "Sarasota County, Florida"
 <div class="hero-meta"><span>67 counties</span><span class="meta-divider">/</span><span>16 years of estimates</span><span class="meta-divider">/</span><span>U.S. Census Bureau</span></div>
 </header>
 
-<main>
+<div class="dashboard-content">
 <section class="control-panel" aria-label="Dashboard controls">
 <div class="year-control">
 <div class="control-heading">
@@ -94,7 +93,7 @@ title: "Sarasota County, Florida"
 <p>These are American Community Survey (ACS) 5-year estimates, labeled by their ending year. Each estimate combines five years of survey responses, so adjacent years overlap and are not single-year snapshots. Household income, rent, and home value are reported in each release's dollars and are not adjusted for inflation here. Education measures are available from 2012 onward. The trend line summarizes the available estimates; it does not forecast the future.</p>
 <p>Source: U.S. Census Bureau, ACS 5-Year Estimates. County geography is Sarasota County, which includes the City of Sarasota and surrounding communities.</p>
 </footer>
-</main>
+</div>
 ```{r}
 #| echo: false
 #| results: asis

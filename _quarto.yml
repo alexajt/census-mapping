@@ -11,10 +11,11 @@ website:
 
 format:
   html:
+    page-layout: full
+    title-block-style: none
     theme:
       - cosmo
       - brand
     css: styles.css
     toc: false
-
 

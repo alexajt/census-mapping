@@ -7,6 +7,12 @@
   --serif: Georgia, "Times New Roman", serif;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   color: var(--ink);
   background:
@@ -15,15 +21,38 @@ body {
   font-family: "Aptos", "Segoe UI", sans-serif;
 }
 
-.hero,
-main {
-  width: min(1120px, calc(100% - 40px));
+.hero {
+  width: min(760px, calc(100% - 40px));
   margin: 0 auto;
 }
 
+#quarto-document-content {
+  grid-column: screen-start / screen-end;
+  width: min(1120px, calc(100% - 40px));
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-right: 0;
+  padding-left: 0;
+}
+
+#title-block-header:empty {
+  display: none;
+}
+
 .hero {
-  max-width: 760px;
   padding: clamp(54px, 9vw, 104px) 0 42px;
+}
+
+.dashboard-content {
+  padding-bottom: 48px;
+}
+
+#quarto-header .navbar {
+  --bs-navbar-color: #53686a;
+  --bs-navbar-hover-color: var(--accent);
+  --bs-navbar-active-color: var(--ink);
+  border-bottom: 1px solid var(--line);
+  background-color: rgba(245, 244, 239, 0.96);
 }
 
 .eyebrow,
@@ -77,10 +106,6 @@ main {
 
 .meta-divider {
   color: #b7bfba;
-}
-
-main {
-  padding-bottom: 48px;
 }
 
 .control-panel,
@@ -171,6 +196,10 @@ main {
   background: #fff;
   font: inherit;
   font-size: 0.86rem;
+}
+
+.metric-control p {
+  margin: 0;
 }
 
 .year-note {
@@ -394,7 +423,7 @@ main {
   margin: 5px 0;
 }
 
-@media (max-width: 760px) {
+@media (max-width: 860px) {
   .control-panel {
     grid-template-columns: 1fr auto;
     gap: 18px;
@@ -415,11 +444,12 @@ main {
 }
 
 @media (max-width: 480px) {
-  .page-shell {
-    width: min(100% - 24px, 1120px);
+  #quarto-document-content {
+    width: calc(100% - 24px);
   }
 
   .hero {
+    width: calc(100% - 24px);
     padding-top: 48px;
   }
 
