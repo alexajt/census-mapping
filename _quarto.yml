@@ -1,8 +1,11 @@
 project:
   type: website
+  resources:
+    - state/florida_counties.geojson
+    - county/florida_tracts.geojson
 
 website:
-  title: "Sarasota County, Florida"
+  title: "Florida Migration & Demographics"
   navbar:
     left:
       - href: index.qmd

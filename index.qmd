@@ -2,10 +2,10 @@
 ---
 
 <header class="hero">
-<div class="eyebrow"><span class="live-dot"></span> FLORIDA, THROUGH TIME</div>
-<h1>A place in motion.</h1>
-<p class="hero-copy">Explore how life in Sarasota County has changed, one Census estimate at a time. Move the slider, choose a measure, and compare Sarasota with its neighbors.</p>
-<div class="hero-meta"><span>67 counties</span><span class="meta-divider">/</span><span>16 years of estimates</span><span class="meta-divider">/</span><span>U.S. Census Bureau</span></div>
+<div class="eyebrow"><span class="live-dot"></span> FLORIDA MIGRATION, NATIVITY &amp; DEMOGRAPHICS</div>
+<h1>Florida in motion.</h1>
+<p class="hero-copy">Investigate migration flows, foreign-born populations, ethnicity, and economic conditions across all 67 Florida counties from 2010 to 2024—and click any county to explore its individual Census tracts.</p>
+<div class="hero-meta"><span>67 Florida counties</span><span class="meta-divider">/</span><span>5,160 Census tracts</span><span class="meta-divider">/</span><span>2010–2024 ACS 5-Year Estimates</span></div>
 </header>
 
 <div class="dashboard-content">
@@ -15,142 +15,286 @@
 <label for="year-slider">Travel through time</label>
 <output id="year-label" for="year-slider">2024</output>
 </div>
-<input id="year-slider" type="range" min="2009" max="2024" value="2024" step="1" aria-label="Select ACS estimate ending year">
-<div class="slider-ends"><span>2009</span><span>2024</span></div>
+<input id="year-slider" type="range" min="2010" max="2024" value="2024" step="1" aria-label="Select ACS estimate ending year">
+<div class="slider-ends"><span>2010</span><span>2024</span></div>
 </div>
 <button id="play-button" class="play-button" type="button" aria-label="Play through years">
 <span aria-hidden="true">▶</span><span id="play-label">Play</span>
 </button>
 <div class="metric-control">
+<label for="county-select">Selected Florida county</label>
+<select id="county-select" aria-label="Select a Florida county"></select>
+</div>
+<div class="metric-control">
 <label for="metric-select">Explore a measure</label>
 <select id="metric-select">
-<option value="population">Population</option>
-<option value="median_household_income">Median household income</option>
-<option value="poverty_rate_percent">People below poverty level</option>
-<option value="median_gross_rent">Median gross rent</option>
-<option value="median_home_value">Median home value</option>
-<option value="homeownership_rate_percent">Homeownership</option>
-<option value="high_school_or_higher_percent">High school graduate or higher</option>
-<option value="bachelors_or_higher_percent">Bachelor's degree or higher</option>
-<option value="under_18_percent">Population under 18</option>
-<option value="age_18_to_64_percent">Population ages 18–64</option>
-<option value="age_65_plus_percent">Population 65 and older</option>
+<optgroup label="Migration Patterns (Past 12 Months)">
+<option value="in_migration_percent">New arrivals from outside county (%)</option>
+<option value="moved_from_other_state_percent">Moved from a different U.S. state (%)</option>
+<option value="moved_from_other_county_percent">Moved from another Florida county (%)</option>
+<option value="moved_from_abroad_percent">Moved from abroad (%)</option>
+<option value="moved_within_county_percent">Moved within same county (%)</option>
+<option value="same_house_percent">Same house 1 year ago (%)</option>
+</optgroup>
+<optgroup label="Foreign-Born &amp; Citizenship">
+<option value="foreign_born_percent">Foreign-born population (%)</option>
+<option value="foreign_born">Foreign-born population (count)</option>
+<option value="naturalized_citizen_percent">Naturalized U.S. citizens (%)</option>
+<option value="non_citizen_percent">Non-U.S. citizens (%)</option>
+</optgroup>
+<optgroup label="Ethnicity &amp; Race">
+<option value="hispanic_percent">Hispanic or Latino (%)</option>
+<option value="white_non_hispanic_percent">White, non-Hispanic (%)</option>
+<option value="black_non_hispanic_percent">Black, non-Hispanic (%)</option>
+<option value="asian_non_hispanic_percent">Asian, non-Hispanic (%)</option>
+</optgroup>
+<optgroup label="Economic Conditions &amp; Population">
+<option value="median_household_income">Median household income ($)</option>
+<option value="poverty_rate_percent">People below poverty level (%)</option>
+<option value="unemployment_rate_percent">Unemployment rate (%)</option>
+<option value="median_gross_rent">Median gross rent ($)</option>
+<option value="median_home_value">Median home value ($)</option>
+<option value="population">Total population</option>
+</optgroup>
 </select>
 </div>
 </section>
 
 <p id="year-note" class="year-note" aria-live="polite"></p>
 
-<section class="stat-grid" aria-label="Sarasota County highlights">
+<section class="stat-grid" aria-label="Selected county highlights">
 <article class="stat-card stat-primary">
 <span class="stat-label" id="current-label">SARASOTA COUNTY · 2024</span>
 <strong class="stat-value" id="current-value">—</strong>
-<span class="stat-detail" id="metric-name">Population</span>
+<span class="stat-detail" id="metric-name">New arrivals from outside county (%)</span>
 </article>
 <article class="stat-card">
-<span class="stat-label">CHANGE SINCE FIRST AVAILABLE</span>
+<span class="stat-label">CHANGE SINCE 2010</span>
 <strong class="stat-value" id="change-value">—</strong>
-<span class="stat-detail" id="change-detail">Compared with the first estimate</span>
+<span class="stat-detail" id="change-detail">Compared with the 2010 estimate</span>
 </article>
 <article class="stat-card">
-<span class="stat-label">VS. FLORIDA</span>
+<span class="stat-label">VS. STATE OF FLORIDA</span>
 <strong class="stat-value" id="state-value">—</strong>
 <span class="stat-detail" id="state-detail">Difference from statewide estimate</span>
 </article>
 <article class="stat-card">
-<span class="stat-label">LONG-RUN DIRECTION</span>
-<strong class="stat-value" id="trend-value">—</strong>
-<span class="stat-detail" id="trend-detail">Linear trend across available estimates</span>
+<span class="stat-label">VS. UNITED STATES</span>
+<strong class="stat-value" id="us-value">—</strong>
+<span class="stat-detail" id="us-detail">Difference from national estimate</span>
 </article>
+</section>
+
+<section class="chart-card" aria-labelledby="map-heading">
+<div class="section-heading">
+<div>
+<p class="section-kicker">INTERACTIVE GEOGRAPHY · COUNTY TO CENSUS TRACT</p>
+<h2 id="map-heading">Click any Florida county to inspect its Census tracts</h2>
+</div>
+<span class="chart-note" id="map-badge">Sarasota County selected</span>
+</div>
+<div class="map-grid">
+<div class="map-panel">
+<div class="map-panel-header">
+<div class="map-panel-title">Florida Counties (<span id="county-map-year">2024</span>)</div>
+<span class="map-panel-sub" id="county-hover-label">Click a county to drill down</span>
+</div>
+<div id="fl-county-map" class="map-stage" role="img" aria-label="Interactive map of Florida counties"></div>
+<div class="map-scale">
+<span id="county-scale-min">—</span>
+<span class="scale-bar"></span>
+<span id="county-scale-max">—</span>
+</div>
+</div>
+<div class="map-panel">
+<div class="map-panel-header">
+<div class="map-panel-title" id="tract-map-title">Sarasota County Census Tracts (2024)</div>
+<span class="map-panel-sub" id="tract-count-label">— tracts</span>
+</div>
+<div id="county-tract-map" class="map-stage" role="img" aria-label="Interactive map of Census tracts in the selected Florida county"></div>
+<div class="map-scale">
+<span id="tract-scale-min">—</span>
+<span class="scale-bar"></span>
+<span id="tract-scale-max">—</span>
+</div>
+<div class="tract-readout" id="tract-readout">
+<div class="tract-readout-title">
+<span id="tract-detail-name">Hover or click a Census tract</span>
+<span id="tract-detail-primary">—</span>
+</div>
+<div class="tract-metrics-mini">
+<div>In-migration<strong id="td-migration">—</strong></div>
+<div>Foreign-born<strong id="td-foreign">—</strong></div>
+<div>Hispanic / Latino<strong id="td-hispanic">—</strong></div>
+<div>Median income<strong id="td-income">—</strong></div>
+<div>Poverty rate<strong id="td-poverty">—</strong></div>
+<div>Population<strong id="td-pop">—</strong></div>
+</div>
+</div>
+</div>
+</div>
 </section>
 
 <section class="chart-card" aria-labelledby="trend-heading">
 <div class="section-heading">
 <div>
-<p class="section-kicker">THE BIG PICTURE</p>
-<h2 id="trend-heading">The shape of change</h2>
+<p class="section-kicker">COUNTY · STATE · COUNTRY COMPARISON (2010–2024)</p>
+<h2 id="trend-heading">How the selected county compares over time</h2>
 </div>
 <span class="chart-note">ACS 5-year estimates</span>
 </div>
-<div id="trend-chart" class="chart-wrap" role="img" aria-label="Trend chart comparing Sarasota, Manatee, Charlotte, and DeSoto counties"></div>
+<div id="trend-chart" class="chart-wrap" role="img" aria-label="Trend chart comparing selected county, Florida, and the United States"></div>
 <div id="trend-legend" class="legend" aria-label="Chart legend"></div>
 </section>
 
 <section class="chart-card comparison-card" aria-labelledby="comparison-heading">
 <div class="section-heading">
 <div>
-<p class="section-kicker">A CLOSER LOOK</p>
-<h2 id="comparison-heading">Sarasota and its neighbors</h2>
+<p class="section-kicker">NEIGHBORHOOD BREAKDOWN</p>
+<h2 id="comparison-heading">Top Census tracts in Sarasota County</h2>
 </div>
-<span class="chart-note" id="comparison-year">2024 estimate</span>
+<span class="chart-note">2024 tract estimates · Click a tract to highlight on map</span>
 </div>
-<p class="comparison-copy">Compare the selected measure across nearby counties for the year you picked.</p>
-<div id="comparison-chart" class="comparison-list" role="img" aria-label="Selected-year comparison of nearby counties"></div>
+<p class="comparison-copy" id="comparison-copy">Showing the top 15 Census tracts in the selected county for this measure. Click any row to highlight that tract on the map above.</p>
+<div id="comparison-chart" class="comparison-list" role="img" aria-label="Top Census tracts in the selected county"></div>
 </section>
 
 <footer class="source-note">
 <strong>Reading the data</strong>
-<p>These are American Community Survey (ACS) 5-year estimates, labeled by their ending year. Each estimate combines five years of survey responses, so adjacent years overlap and are not single-year snapshots. Household income, rent, and home value are reported in each release's dollars and are not adjusted for inflation here. Education measures are available from 2012 onward. The trend line summarizes the available estimates; it does not forecast the future.</p>
-<p>Source: U.S. Census Bureau, ACS 5-Year Estimates. County geography is Sarasota County, which includes the City of Sarasota and surrounding communities.</p>
+<p>Data is organized across three geographic levels: <code>county/</code> (Census tracts across Florida counties), <code>state/</code> (all 67 Florida counties and statewide totals, 2010–2024), and <code>country/</code> (United States national totals, 2010–2024). Estimates come from the U.S. Census Bureau's American Community Survey (ACS) 5-year releases (`B07001` for migration, `B05002` for nativity and citizenship, `B03002` for race and Hispanic origin, and `B19013`, `B17001`, `B23025`, `B25064`, `B25077` for economic conditions).</p>
 </footer>
 </div>
+
 ```{r}
 #| echo: false
 #| results: asis
 
-data <- readr::read_csv(
-  "data/florida_county_acs_trends.csv",
+fl_state <- readr::read_csv(
+  "state/florida_migration_acs.csv",
+  col_types = readr::cols(GEOID = "c"),
   show_col_types = FALSE
 ) |>
   dplyr::mutate(
-    area = dplyr::case_when(
-      GEOID == "12" ~ "Florida",
-      GEOID == "12115" ~ "Sarasota",
-      GEOID == "12081" ~ "Manatee",
-      GEOID == "12015" ~ "Charlotte",
-      GEOID == "12027" ~ "DeSoto",
-      TRUE ~ NA_character_
-    )
-  ) |>
-  dplyr::filter(!is.na(area)) |>
-  dplyr::select(area, year, dplyr::where(is.numeric))
+    short_name = sub(" County, Florida$|, Florida$", "", name)
+  )
 
-json_data <- jsonlite::toJSON(data, dataframe = "rows", na = "null", auto_unbox = TRUE)
-cat('<script id="census-data" type="application/json">', json_data, '</script>')
+us_national <- readr::read_csv(
+  "country/us_migration_acs.csv",
+  col_types = readr::cols(GEOID = "c"),
+  show_col_types = FALSE
+) |>
+  dplyr::filter(level == "us") |>
+  dplyr::mutate(short_name = "United States")
+
+fl_tracts <- readr::read_csv(
+  "county/florida_tracts_2024.csv",
+  col_types = readr::cols(GEOID = "c", county_geoid = "c"),
+  show_col_types = FALSE
+) |>
+  dplyr::mutate(
+    short_name = sub(";.*$", "", name)
+  ) |>
+  dplyr::select(-name, -level, -year)
+
+counties_geojson <- paste(readLines("state/florida_counties.geojson", warn = FALSE), collapse = "\n")
+
+cat(
+  '<script id="fl-series-data" type="application/json">',
+  jsonlite::toJSON(
+    dplyr::bind_rows(fl_state, us_national) |> dplyr::select(-name),
+    dataframe = "rows",
+    na = "null",
+    auto_unbox = TRUE,
+    digits = 2
+  ),
+  "</script>\n"
+)
+
+cat(
+  '<script id="fl-tracts-data" type="application/json">',
+  jsonlite::toJSON(
+    fl_tracts,
+    dataframe = "rows",
+    na = "null",
+    auto_unbox = TRUE,
+    digits = 2
+  ),
+  "</script>\n"
+)
+
+cat('<script id="fl-counties-geojson" type="application/json">', counties_geojson, "</script>\n")
 ```
 
 <script>
 (() => {
-  const data = JSON.parse(document.getElementById("census-data").textContent);
-  const areas = ["Sarasota", "Manatee", "Charlotte", "DeSoto"];
-  const colors = {
-    Sarasota: "#d65b42",
-    Manatee: "#287a78",
-    Charlotte: "#6684a5",
-    DeSoto: "#9b865b"
-  };
-  const metrics = {
-    population: { label: "Population", kind: "number" },
-    median_household_income: { label: "Median household income", kind: "currency" },
-    poverty_rate_percent: { label: "Below poverty level", kind: "percent" },
-    median_gross_rent: { label: "Median gross rent", kind: "currency" },
-    median_home_value: { label: "Median home value", kind: "currency" },
-    homeownership_rate_percent: { label: "Homeownership", kind: "percent" },
-    high_school_or_higher_percent: { label: "High school graduate or higher", kind: "percent", start: 2012 },
-    bachelors_or_higher_percent: { label: "Bachelor's degree or higher", kind: "percent", start: 2012 },
-    under_18_percent: { label: "Population under 18", kind: "percent" },
-    age_18_to_64_percent: { label: "Population ages 18–64", kind: "percent" },
-    age_65_plus_percent: { label: "Population 65 and older", kind: "percent" }
-  };
-  const slider = document.getElementById("year-slider");
-  const metricSelect = document.getElementById("metric-select");
-  const playButton = document.getElementById("play-button");
+  const seriesData = JSON.parse(document.getElementById("fl-series-data").textContent);
+  const tractsData = JSON.parse(document.getElementById("fl-tracts-data").textContent);
+  const countiesGeo = JSON.parse(document.getElementById("fl-counties-geojson").textContent);
+
+  const tractByGeoid = new Map(tractsData.map(row => [row.GEOID, row]));
+  let tractsGeo = null;
+  let selectedCountyGeoid = "12115"; // Default: Sarasota County
+  let selectedTractGeoid = null;
   let playTimer;
 
-  const rowsFor = (area, key) => data
-    .filter(row => row.area === area && Number.isFinite(row[key]))
+  const metrics = {
+    in_migration_percent: { label: "New arrivals from outside county (%)", kind: "percent" },
+    moved_from_other_state_percent: { label: "Moved from a different U.S. state (%)", kind: "percent" },
+    moved_from_other_county_percent: { label: "Moved from another Florida county (%)", kind: "percent" },
+    moved_from_abroad_percent: { label: "Moved from abroad (%)", kind: "percent" },
+    moved_within_county_percent: { label: "Moved within same county (%)", kind: "percent" },
+    same_house_percent: { label: "Same house 1 year ago (%)", kind: "percent" },
+    foreign_born_percent: { label: "Foreign-born population (%)", kind: "percent" },
+    foreign_born: { label: "Foreign-born population (count)", kind: "number" },
+    naturalized_citizen_percent: { label: "Naturalized U.S. citizens (%)", kind: "percent" },
+    non_citizen_percent: { label: "Non-U.S. citizens (%)", kind: "percent" },
+    hispanic_percent: { label: "Hispanic or Latino (%)", kind: "percent" },
+    white_non_hispanic_percent: { label: "White, non-Hispanic (%)", kind: "percent" },
+    black_non_hispanic_percent: { label: "Black, non-Hispanic (%)", kind: "percent" },
+    asian_non_hispanic_percent: { label: "Asian, non-Hispanic (%)", kind: "percent" },
+    median_household_income: { label: "Median household income ($)", kind: "currency" },
+    poverty_rate_percent: { label: "People below poverty level (%)", kind: "percent" },
+    unemployment_rate_percent: { label: "Unemployment rate (%)", kind: "percent", start: 2011 },
+    median_gross_rent: { label: "Median gross rent ($)", kind: "currency" },
+    median_home_value: { label: "Median home value ($)", kind: "currency" },
+    population: { label: "Total population", kind: "number" }
+  };
+
+  const slider = document.getElementById("year-slider");
+  const countySelect = document.getElementById("county-select");
+  const metricSelect = document.getElementById("metric-select");
+  const playButton = document.getElementById("play-button");
+
+  // Populate Florida county dropdown alphabetically
+  const countyList = Array.from(
+    new Map(
+      seriesData
+        .filter(r => r.level === "county")
+        .map(r => [r.GEOID, r.short_name])
+    ).entries()
+  ).sort((a, b) => a[1].localeCompare(b[1]));
+
+  countyList.forEach(([geoid, name]) => {
+    const opt = document.createElement("option");
+    opt.value = geoid;
+    opt.textContent = `${name} County`;
+    if (geoid === selectedCountyGeoid) opt.selected = true;
+    countySelect.append(opt);
+  });
+
+  const countyName = geoid => {
+    const match = countyList.find(([id]) => id === geoid);
+    return match ? `${match[1]} County` : "Selected County";
+  };
+
+  const rowsForGeoid = (geoid, key) => seriesData
+    .filter(row => row.GEOID === geoid && Number.isFinite(row[key]))
     .sort((a, b) => a.year - b.year);
-  const rowAt = (area, year) => data.find(row => row.area === area && row.year === year);
+
+  const rowAtGeoid = (geoid, year) => seriesData.find(
+    row => row.GEOID === geoid && row.year === year
+  );
+
   const format = (value, kind, compact = false) => {
     if (!Number.isFinite(value)) return "—";
     if (kind === "percent") return `${value.toFixed(1)}%`;
@@ -167,15 +311,239 @@ cat('<script id="census-data" type="application/json">', json_data, '</script>')
       notation: compact ? "compact" : "standard"
     }).format(value);
   };
+
   const signed = value => `${value > 0 ? "+" : ""}${value.toFixed(1)}%`;
   const text = (id, value) => {
-    document.getElementById(id).textContent = value;
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
   };
+
   const svgNode = (name, attributes = {}) => {
     const node = document.createElementNS("http://www.w3.org/2000/svg", name);
     for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, value);
     return node;
   };
+
+  // Color interpolation for choropleth maps
+  const colorRamp = [
+    [231, 239, 233],
+    [126, 177, 166],
+    [43, 111, 106],
+    [214, 91, 66]
+  ];
+
+  function interpolateColor(t) {
+    if (!Number.isFinite(t)) return "#eceee9";
+    const clamped = Math.max(0, Math.min(1, t));
+    const scaled = clamped * (colorRamp.length - 1);
+    const idx = Math.min(colorRamp.length - 2, Math.floor(scaled));
+    const frac = scaled - idx;
+    const c0 = colorRamp[idx];
+    const c1 = colorRamp[idx + 1];
+    const r = Math.round(c0[0] + (c1[0] - c0[0]) * frac);
+    const g = Math.round(c0[1] + (c1[1] - c0[1]) * frac);
+    const b = Math.round(c0[2] + (c1[2] - c0[2]) * frac);
+    return `rgb(${r}, ${g}, ${b})`;
+  }
+
+  function extractRings(geometry) {
+    if (!geometry) return [];
+    if (geometry.type === "Polygon") return [geometry.coordinates];
+    if (geometry.type === "MultiPolygon") return geometry.coordinates;
+    return [];
+  }
+
+  function computeBounds(features) {
+    let minLon = Infinity, maxLon = -Infinity, minLat = Infinity, maxLat = -Infinity;
+    features.forEach(f => {
+      extractRings(f.geometry).forEach(poly => {
+        poly.forEach(ring => {
+          ring.forEach(([lon, lat]) => {
+            if (lon < minLon) minLon = lon;
+            if (lon > maxLon) maxLon = lon;
+            if (lat < minLat) minLat = lat;
+            if (lat > maxLat) maxLat = lat;
+          });
+        });
+      });
+    });
+    return { minLon, maxLon, minLat, maxLat };
+  }
+
+  function geometryToPath(geometry, project) {
+    const polys = extractRings(geometry);
+    return polys.map(poly =>
+      poly.map(ring =>
+        ring.map(([lon, lat], i) => {
+          const [x, y] = project(lon, lat);
+          return `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
+        }).join(" ") + " Z"
+      ).join(" ")
+    ).join(" ");
+  }
+
+  function makeProjector(features, width, height, pad = 12) {
+    const b = computeBounds(features);
+    const midLat = ((b.minLat + b.maxLat) / 2) * (Math.PI / 180);
+    const cosLat = Math.cos(midLat) || 1;
+    const lonSpan = (b.maxLon - b.minLon) * cosLat || 0.01;
+    const latSpan = (b.maxLat - b.minLat) || 0.01;
+    const scale = Math.min((width - pad * 2) / lonSpan, (height - pad * 2) / latSpan);
+    const drawnW = lonSpan * scale;
+    const drawnH = latSpan * scale;
+    const offsetX = (width - drawnW) / 2;
+    const offsetY = (height - drawnH) / 2;
+    return (lon, lat) => [
+      offsetX + (lon - b.minLon) * cosLat * scale,
+      offsetY + (b.maxLat - lat) * scale
+    ];
+  }
+
+  function updateTractReadout(tractRow, key, meta) {
+    if (!tractRow) {
+      text("tract-detail-name", "Hover or click a Census tract on the right map");
+      text("tract-detail-primary", "—");
+      text("td-migration", "—");
+      text("td-foreign", "—");
+      text("td-hispanic", "—");
+      text("td-income", "—");
+      text("td-poverty", "—");
+      text("td-pop", "—");
+      return;
+    }
+    text("tract-detail-name", `${tractRow.short_name} (${countyName(tractRow.county_geoid)})`);
+    text("tract-detail-primary", `${meta.label}: ${format(tractRow[key], meta.kind)}`);
+    text("td-migration", format(tractRow.in_migration_percent, "percent"));
+    text("td-foreign", format(tractRow.foreign_born_percent, "percent"));
+    text("td-hispanic", format(tractRow.hispanic_percent, "percent"));
+    text("td-income", format(tractRow.median_household_income, "currency"));
+    text("td-poverty", format(tractRow.poverty_rate_percent, "percent"));
+    text("td-pop", format(tractRow.population, "number"));
+  }
+
+  function renderCountyMap(key, meta, year) {
+    const width = 420, height = 320;
+    const svg = svgNode("svg", { viewBox: `0 0 ${width} ${height}` });
+    const features = countiesGeo.features;
+    const project = makeProjector(features, width, height, 10);
+
+    const valByCounty = new Map();
+    seriesData
+      .filter(r => r.level === "county" && r.year === year)
+      .forEach(r => valByCounty.set(r.GEOID, r[key]));
+
+    const finiteVals = Array.from(valByCounty.values()).filter(Number.isFinite);
+    const minVal = finiteVals.length ? Math.min(...finiteVals) : 0;
+    const maxVal = finiteVals.length ? Math.max(...finiteVals) : 1;
+    const span = (maxVal - minVal) || 1;
+
+    text("county-scale-min", format(minVal, meta.kind, true));
+    text("county-scale-max", format(maxVal, meta.kind, true));
+    text("county-map-year", year);
+
+    features.forEach(feature => {
+      const geoid = feature.properties.GEOID;
+      const val = valByCounty.get(geoid);
+      const t = Number.isFinite(val) ? (val - minVal) / span : NaN;
+      const path = svgNode("path", {
+        d: geometryToPath(feature.geometry, project),
+        fill: interpolateColor(t),
+        class: `map-feature${geoid === selectedCountyGeoid ? " is-active" : ""}`
+      });
+      const title = svgNode("title");
+      title.textContent = `${feature.properties.county_name} County: ${format(val, meta.kind)}`;
+      path.append(title);
+
+      path.addEventListener("mouseenter", () => {
+        text("county-hover-label", `${feature.properties.county_name} County · ${format(val, meta.kind)}`);
+      });
+      path.addEventListener("mouseleave", () => {
+        text("county-hover-label", "Click a county to drill down");
+      });
+      path.addEventListener("click", () => {
+        selectedCountyGeoid = geoid;
+        selectedTractGeoid = null;
+        countySelect.value = geoid;
+        update();
+      });
+      svg.append(path);
+    });
+
+    const stage = document.getElementById("fl-county-map");
+    stage.replaceChildren(svg);
+  }
+
+  function renderTractMap(key, meta) {
+    const stage = document.getElementById("county-tract-map");
+    const cName = countyName(selectedCountyGeoid);
+    text("tract-map-title", `${cName} Census Tracts (2024)`);
+    text("map-badge", `${cName} selected`);
+
+    const countyTractRows = tractsData.filter(r => r.county_geoid === selectedCountyGeoid);
+    text("tract-count-label", `${countyTractRows.length} Census tracts`);
+
+    if (!tractsGeo) {
+      stage.textContent = "Loading Census tract boundaries…";
+      return;
+    }
+
+    const features = tractsGeo.features.filter(f => f.properties.county_geoid === selectedCountyGeoid);
+    const width = 440, height = 320;
+    const svg = svgNode("svg", { viewBox: `0 0 ${width} ${height}` });
+    const project = makeProjector(features, width, height, 12);
+
+    const finiteVals = countyTractRows.map(r => r[key]).filter(Number.isFinite);
+    const minVal = finiteVals.length ? Math.min(...finiteVals) : 0;
+    const maxVal = finiteVals.length ? Math.max(...finiteVals) : 1;
+    const span = (maxVal - minVal) || 1;
+
+    text("tract-scale-min", format(minVal, meta.kind, true));
+    text("tract-scale-max", format(maxVal, meta.kind, true));
+
+    // Default readout to highest-value tract in county if none clicked
+    const topTract = [...countyTractRows]
+      .filter(r => Number.isFinite(r[key]))
+      .sort((a, b) => b[key] - a[key])[0];
+    const activeTractRow = (selectedTractGeoid && tractByGeoid.get(selectedTractGeoid)) || topTract;
+    updateTractReadout(activeTractRow, key, meta);
+
+    features.forEach(feature => {
+      const geoid = feature.properties.GEOID;
+      const row = tractByGeoid.get(geoid);
+      const val = row ? row[key] : NaN;
+      const t = Number.isFinite(val) ? (val - minVal) / span : NaN;
+      const isSelected = geoid === (selectedTractGeoid || activeTractRow?.GEOID);
+
+      const path = svgNode("path", {
+        d: geometryToPath(feature.geometry, project),
+        fill: interpolateColor(t),
+        class: `map-feature${isSelected ? " is-active" : ""}`
+      });
+      const title = svgNode("title");
+      title.textContent = `${row?.short_name || feature.properties.tract_name}: ${format(val, meta.kind)}`;
+      path.append(title);
+
+      path.addEventListener("mouseenter", () => {
+        if (row) updateTractReadout(row, key, meta);
+      });
+      path.addEventListener("mouseleave", () => {
+        updateTractReadout(
+          (selectedTractGeoid && tractByGeoid.get(selectedTractGeoid)) || topTract,
+          key,
+          meta
+        );
+      });
+      path.addEventListener("click", () => {
+        selectedTractGeoid = geoid;
+        renderTractMap(key, meta);
+        renderTractRanking(key, meta);
+      });
+
+      svg.append(path);
+    });
+
+    stage.replaceChildren(svg);
+  }
 
   function renderTrend(key, meta) {
     const width = 900;
@@ -186,14 +554,29 @@ cat('<script id="census-data" type="application/json">', json_data, '</script>')
       role: "presentation",
       preserveAspectRatio: "none"
     });
-    const series = areas.map(area => ({ area, rows: rowsFor(area, key) }));
+
+    const cName = countyName(selectedCountyGeoid);
+    const lines = [
+      { id: selectedCountyGeoid, label: cName, color: "#d65b42" },
+      { id: "12", label: "State of Florida", color: "#287a78" },
+      { id: "1", label: "United States", color: "#6684a5" }
+    ];
+
+    // If population or foreign_born count is selected, state/US totals are on a different scale;
+    // plot only the selected county so the county curve isn't flattened.
+    const activeLines = meta.kind === "number" ? [lines[0]] : lines;
+
+    const series = activeLines.map(item => ({
+      ...item,
+      rows: rowsForGeoid(item.id, key)
+    }));
     const values = series.flatMap(item => item.rows.map(row => row[key]));
-    const minValue = Math.min(...values);
-    const maxValue = Math.max(...values);
+    const minValue = values.length ? Math.min(...values) : 0;
+    const maxValue = values.length ? Math.max(...values) : 1;
     const spread = maxValue - minValue || Math.abs(maxValue) * 0.1 || 1;
     const low = Math.max(0, minValue - spread * 0.12);
     const high = maxValue + spread * 0.12;
-    const x = year => pad.left + (year - 2009) / (2024 - 2009) * (width - pad.left - pad.right);
+    const x = year => pad.left + (year - 2010) / (2024 - 2010) * (width - pad.left - pad.right);
     const y = value => height - pad.bottom - (value - low) / (high - low) * (height - pad.top - pad.bottom);
 
     for (let tick = 0; tick <= 4; tick += 1) {
@@ -204,125 +587,168 @@ cat('<script id="census-data" type="application/json">', json_data, '</script>')
       label.textContent = format(value, meta.kind, true);
       svg.append(label);
     }
-    [2009, 2012, 2015, 2018, 2021, 2024].forEach(year => {
+
+    [2010, 2012, 2015, 2018, 2021, 2024].forEach(year => {
       const label = svgNode("text", { x: x(year), y: height - 12, "text-anchor": "middle", class: "axis-label" });
       label.textContent = year;
       svg.append(label);
     });
-    series.forEach(({ area, rows }) => {
+
+    series.forEach(({ label, color, rows }) => {
       if (!rows.length) return;
       const path = rows.map((row, index) => `${index ? "L" : "M"}${x(row.year)},${y(row[key])}`).join(" ");
-      svg.append(svgNode("path", { d: path, class: "trend-line", stroke: colors[area] }));
+      svg.append(svgNode("path", { d: path, class: "trend-line", stroke: color }));
       rows.forEach(row => {
         svg.append(svgNode("circle", {
-          cx: x(row.year), cy: y(row[key]), r: row.year === Number(slider.value) ? 5 : 2.5,
-          fill: colors[area], class: "trend-point"
+          cx: x(row.year),
+          cy: y(row[key]),
+          r: row.year === Number(slider.value) ? 5 : 2.5,
+          fill: color,
+          class: "trend-point"
         }));
       });
     });
+
     const chart = document.getElementById("trend-chart");
     chart.replaceChildren(svg);
-    chart.setAttribute("aria-label", `${meta.label} trends for Sarasota, Manatee, Charlotte, and DeSoto counties from 2009 through 2024`);
 
     const legend = document.getElementById("trend-legend");
     legend.replaceChildren();
-    areas.forEach(area => {
+    activeLines.forEach(({ label, color }) => {
       const item = document.createElement("span");
       item.className = "legend-item";
       const swatch = document.createElement("i");
-      swatch.style.backgroundColor = colors[area];
-      item.append(swatch, document.createTextNode(`${area} County`));
+      swatch.style.backgroundColor = color;
+      item.append(swatch, document.createTextNode(label));
       legend.append(item);
     });
   }
 
-  function renderComparison(key, meta, year) {
-    const values = areas
-      .map(area => ({ area, value: rowAt(area, year)?.[key] }))
-      .filter(item => Number.isFinite(item.value));
-    const maxValue = Math.max(...values.map(item => item.value), 1);
+  function renderTractRanking(key, meta) {
+    const cName = countyName(selectedCountyGeoid);
+    text("comparison-heading", `Top Census tracts in ${cName}`);
+
+    const tracts = tractsData
+      .filter(r => r.county_geoid === selectedCountyGeoid && Number.isFinite(r[key]))
+      .sort((a, b) => b[key] - a[key])
+      .slice(0, 15);
+
+    const maxValue = Math.max(...tracts.map(r => r[key]), 1);
     const list = document.getElementById("comparison-chart");
     list.replaceChildren();
-    values.forEach(({ area, value }) => {
+
+    tracts.forEach((tract, index) => {
+      const isSelected = tract.GEOID === selectedTractGeoid || (!selectedTractGeoid && index === 0);
       const row = document.createElement("div");
-      row.className = `comparison-row${area === "Sarasota" ? " is-sarasota" : ""}`;
+      row.className = `comparison-row is-clickable${isSelected ? " is-sarasota" : ""}`;
+
       const name = document.createElement("span");
       name.className = "comparison-name";
-      name.textContent = `${area} County`;
+      name.textContent = tract.short_name;
+
       const track = document.createElement("span");
       track.className = "bar-track";
       const bar = document.createElement("i");
       bar.className = "bar-fill";
-      bar.style.width = `${Math.max(1, value / maxValue * 100)}%`;
-      bar.style.backgroundColor = colors[area];
+      bar.style.width = `${Math.max(1, tract[key] / maxValue * 100)}%`;
+      bar.style.backgroundColor = isSelected ? "#d65b42" : "#287a78";
       track.append(bar);
+
       const amount = document.createElement("strong");
       amount.className = "comparison-value";
-      amount.textContent = format(value, meta.kind, true);
+      amount.textContent = format(tract[key], meta.kind, true);
+
       row.append(name, track, amount);
+      row.addEventListener("click", () => {
+        selectedTractGeoid = tract.GEOID;
+        renderTractMap(key, meta);
+        renderTractRanking(key, meta);
+      });
       list.append(row);
     });
-    list.setAttribute("aria-label", `${meta.label} in nearby counties in ${year}`);
+  }
 
-    const florida = rowAt("Florida", year)?.[key];
-    const sarasota = rowAt("Sarasota", year)?.[key];
-    const stateDetail = Number.isFinite(florida) && Number.isFinite(sarasota)
-      ? `${format(florida, meta.kind, true)} statewide · Sarasota ${
-        meta.kind === "number"
-          ? `is ${(sarasota / florida * 100).toFixed(1)}% of Florida's total`
-          : meta.kind === "percent"
-            ? `is ${sarasota - florida > 0 ? "+" : ""}${(sarasota - florida).toFixed(1)} percentage points`
-            : `is ${signed((sarasota / florida - 1) * 100)} vs. Florida`
-      }`
-      : "Florida comparison unavailable";
-    text("state-value", Number.isFinite(florida) ? format(florida, meta.kind, true) : "—");
-    text("state-detail", stateDetail);
+  function updateComparisonCard(targetId, detailId, countyVal, refVal, refLabel, meta) {
+    if (!Number.isFinite(refVal) || !Number.isFinite(countyVal)) {
+      text(targetId, "—");
+      text(detailId, `${refLabel} comparison unavailable`);
+      return;
+    }
+    text(targetId, format(refVal, meta.kind, true));
+    const diffText = meta.kind === "number"
+      ? `County is ${(countyVal / refVal * 100).toFixed(2)}% of ${refLabel} total`
+      : meta.kind === "percent"
+        ? `County is ${countyVal - refVal > 0 ? "+" : ""}${(countyVal - refVal).toFixed(1)} pts vs. ${refLabel}`
+        : `County is ${signed((countyVal / refVal - 1) * 100)} vs. ${refLabel}`;
+    text(detailId, diffText);
   }
 
   function update() {
     const year = Number(slider.value);
     const key = metricSelect.value;
     const meta = metrics[key];
-    const current = rowAt("Sarasota", year)?.[key];
-    const series = rowsFor("Sarasota", key);
+    const cName = countyName(selectedCountyGeoid);
+    const current = rowAtGeoid(selectedCountyGeoid, year)?.[key];
+    const series = rowsForGeoid(selectedCountyGeoid, key);
     const first = series[0];
     const selected = series.find(row => row.year === year);
 
     text("year-label", year);
-    text("current-label", `SARASOTA COUNTY · ${year}`);
+    text("current-label", `${cName.toUpperCase()} · ${year}`);
     text("metric-name", meta.label);
-    text("comparison-year", `${year} ACS estimate`);
+
     if (Number.isFinite(current)) {
       text("current-value", format(current, meta.kind));
-      text("change-value", selected && first
-        ? signed((selected[key] / first[key] - 1) * 100)
-        : "—");
-      text("change-detail", first
-        ? `Since ${first.year}, the first available estimate`
-        : "No estimate available");
+      if (selected && first && first[key] !== 0) {
+        const changeStr = meta.kind === "percent"
+          ? `${selected[key] - first[key] > 0 ? "+" : ""}${(selected[key] - first[key]).toFixed(1)} pts`
+          : signed((selected[key] / first[key] - 1) * 100);
+        text("change-value", changeStr);
+        text("change-detail", `Since ${first.year} (${format(first[key], meta.kind)})`);
+      } else {
+        text("change-value", "—");
+        text("change-detail", "Baseline unavailable");
+      }
     } else {
       text("current-value", "Not available");
       text("change-value", "—");
       text("change-detail", meta.start ? `Available from ${meta.start}` : "No estimate available");
     }
 
-    const average = series.reduce((sum, row) => sum + row[key], 0) / (series.length || 1);
-    const xMean = series.reduce((sum, row) => sum + row.year, 0) / (series.length || 1);
-    const slope = series.reduce((sum, row) => sum + (row.year - xMean) * (row[key] - average), 0)
-      / series.reduce((sum, row) => sum + (row.year - xMean) ** 2, 0);
-    const annualPercent = average ? slope / average * 100 : 0;
-    text("trend-value", `${annualPercent > 0 ? "+" : ""}${annualPercent.toFixed(1)}%`);
-    text("trend-detail", "Average annual rate from a linear trend");
+    const floridaVal = rowAtGeoid("12", year)?.[key];
+    const usVal = rowAtGeoid("1", year)?.[key];
+    updateComparisonCard("state-value", "state-detail", current, floridaVal, "Florida", meta);
+    updateComparisonCard("us-value", "us-detail", current, usVal, "U.S.", meta);
 
-    const end = year;
-    text("year-note", `ACS ${end - 4}–${end} five-year estimate${meta.start && year < meta.start ? ` · ${meta.label} begins in ${meta.start}` : ""}`);
+    text("year-note", `ACS ${year - 4}–${year} five-year estimate · Click any Florida county on the map to explore its Census tracts`);
     document.getElementById("year-note").classList.toggle("is-unavailable", !Number.isFinite(current));
+
+    renderCountyMap(key, meta, year);
+    renderTractMap(key, meta);
     renderTrend(key, meta);
-    renderComparison(key, meta, year);
+    renderTractRanking(key, meta);
   }
 
+  // Load Florida Census tract polygons asynchronously
+  fetch("county/florida_tracts.geojson")
+    .then(r => r.json())
+    .then(geo => {
+      tractsGeo = geo;
+      const key = metricSelect.value;
+      renderTractMap(key, metrics[key]);
+    })
+    .catch(() => {
+      text("county-tract-map", "Could not load tract boundary file.");
+    });
+
   slider.addEventListener("input", update);
+  countySelect.addEventListener("change", () => {
+    selectedCountyGeoid = countySelect.value;
+    selectedTractGeoid = null;
+    update();
+  });
   metricSelect.addEventListener("change", update);
+
   playButton.addEventListener("click", () => {
     if (playTimer) {
       clearInterval(playTimer);
@@ -348,6 +774,7 @@ cat('<script id="census-data" type="application/json">', json_data, '</script>')
       update();
     }, 850);
   });
+
   update();
 })();
 </script>
